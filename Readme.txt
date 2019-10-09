@@ -7,8 +7,17 @@ A. Calculation
 
 B. Visualization
 1. Visualize brain stl
-2. Visualize sphere with radius of summed value/264*C , where C is a constant, suggest C=10 (you can try tune C to have better outlook)
-3. Visualize line source of top15 id with line thickness v[id1, id2]*K, where K is a constant, suggest K=5 (you can try tune K to have better outlook)
+2. Visualize sphere with radius of summed value/264*C , where C is a constant, suggest C=5 (you can try tune C to have better outlook)
+3. Visualize line source of top15 id with line thickness v[id1, id2]*K, where K is a constant, suggest K=3 (you can try tune K to have better outlook)
 
 C. Export
 1. Export as png in different views of angle
+		- fmri-connection-anterior.png
+		- fmri-connection-posterior.png
+		- fmri-connection-inferior.png
+		- fmri-connection-superior.png
+		- fmri-connection-left.png
+		- fmri-connection-right.png
+
+D. IO
+fmriConnection --csv ${CSV_PATH} --output {OUTPUT_DIR}
