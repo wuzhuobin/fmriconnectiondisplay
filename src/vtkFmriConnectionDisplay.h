@@ -1,3 +1,6 @@
+#ifndef __VTK_FMRI_CONNECTION_DISPLAY_H__
+#define __VTK_FMRI_CONNECTION_DISPLAY_H__
+#pragma once
 #include <vtkPolyDataAlgorithm.h>
 
 class vtkFmriConnectionDisplay : public vtkPolyDataAlgorithm
@@ -23,4 +26,9 @@ protected:
 private:
   vtkFmriConnectionDisplay(const vtkFmriConnectionDisplay&) = delete;
   void operator=(const vtkFmriConnectionDisplay&) = delete;
+  static const int TOP;
+  static const double C;
+  static const double K;
 };
+
+#endif //!__VTK_FMRI_CONNECTION_DISPLAY_H__
