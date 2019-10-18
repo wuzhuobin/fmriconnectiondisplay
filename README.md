@@ -2,15 +2,19 @@
 A. Calculation
 
   1. Read 264x264 matrix (/test/fmri_correlation.csv)
-  2. Sum along row
-  3. Select top 15 highest row id
-  4. Get top15 id xyz coordinate from header file (/resources/mni_power_264.h)
+  2. Reserve top10% highest value of upper-right half，只保留X部分的最大10%
+
+  |1xxxx|
+  | 1xxx|
+  |  1xx|
+  |   1x|
+  |    1|
 
 B. Visualization
 
   1. Visualize brain stl (split left and right brain)
-  2. Visualize sphere with radius of summed value/264*C , where C is a constant, suggest C=5 (you can try tune C to have better outlook)
-  3. Visualize line source of top15 id with line thickness v[id1, id2]*K, where K is a constant, suggest K=3 (you can try tune K to have better outlook)
+  2. Visualize all spheres with same size and different colors(color will be provided in later stage)
+  3. Visualize top10% line source with same line thickness
 
 C. Export
 
