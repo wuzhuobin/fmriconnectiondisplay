@@ -21,6 +21,7 @@ const double vtkFmriConnectionDisplay::K = 1;
 vtkFmriConnectionDisplay::vtkFmriConnectionDisplay() {
   this->Matrix = nullptr;
   this->SetNumberOfInputPorts(0);
+  this->SetNumberOfOutputPorts(2);
 }
 
 vtkFmriConnectionDisplay::~vtkFmriConnectionDisplay() {
@@ -51,9 +52,13 @@ int vtkFmriConnectionDisplay::RequestData(
     vtkErrorMacro("The matrix is null.");
     return 0;
   }
-  vtkInformation *outInfo = outputVector->GetInformationObject(0);
-  vtkPolyData *output = vtkPolyData::SafeDownCast(
-    outInfo->Get(vtkDataObject::DATA_OBJECT())
+  vtkInformation *outInfo1 = outputVector->GetInformationObject(0);
+  vtkPolyData *output1 = vtkPolyData::SafeDownCast(
+    outInfo1->Get(vtkDataObject::DATA_OBJECT())
+  );
+  vtkInformation *outInfo2 = outputVector->GetInformationObject(1);
+  vtkPolyData *output2 = vtkPolyData::SafeDownCast(
+    outInfo2->Get(vtkDataObject::DATA_OBJECT())
   );
   // double *sum = new double[this->Matrix->size()];
   std::size_t i = 0;
@@ -69,7 +74,9 @@ int vtkFmriConnectionDisplay::RequestData(
     [](const Sum &lhs, const Sum &rhs) { return lhs.second > rhs.second; 
   });
   std::vector<vtkSmartPointer<vtkSphereSource>> spheres;
-  vtkSmartPointer<vtkAppendPolyData> append = 
+  vtkSmartPointer<vtkAppendPolyData> append1 = 
+    vtkSmartPointer<vtkAppendPolyData>::New();
+  vtkSmartPointer<vtkAppendPolyData> append2 =
     vtkSmartPointer<vtkAppendPolyData>::New();
   std::vector<vtkSmartPointer<vtkLineSource>> lines;
   std::vector<vtkSmartPointer<vtkTubeFilter>> tubes;
@@ -79,7 +86,7 @@ int vtkFmriConnectionDisplay::RequestData(
     spheres.push_back(vtkSmartPointer<vtkSphereSource>::New());
     spheres.back()->SetCenter(center[1], center[2], center[3]);
     spheres.back()->SetRadius(radius);
-    append->AddInputConnection(spheres.back()->GetOutputPort());
+    append1->AddInputConnection(spheres.back()->GetOutputPort());
     for (std::size_t j = 0; j < TOP; ++j) {
       const int * const point2  = mni_power_264[sum[j].first];
       lines.push_back(vtkSmartPointer<vtkLineSource>::New());
@@ -88,11 +95,13 @@ int vtkFmriConnectionDisplay::RequestData(
       tubes.push_back(vtkSmartPointer<vtkTubeFilter>::New());
       tubes.back()->SetInputConnection(lines.back()->GetOutputPort());
       tubes.back()->SetRadius((*this->Matrix)[i][j] * K);
-      append->AddInputConnection(tubes.back()->GetOutputPort());
+      append2->AddInputConnection(tubes.back()->GetOutputPort());
     }
   }
-  append->Update();
-  output->ShallowCopy(append->GetOutput());
+  append1->Update();
+  output1->ShallowCopy(append1->GetOutput());
+  append2->Update();
+  output2->ShallowCopy(append2->GetOutput());
   // for(std::size_t i = 0; i < 15; ++i) {
   //   cout << sum[i].second << '\t';
   // }

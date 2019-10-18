@@ -45,13 +45,23 @@ int main( int argc, char** argv )
   std::cout << *fmri_filter;
   std::cin.get();
 
-  vtkSmartPointer<vtkPolyDataMapper> mapper =
+  vtkSmartPointer<vtkPolyDataMapper> sphereMapper =
       vtkSmartPointer<vtkPolyDataMapper>::New();
-  mapper->SetInputConnection(fmri_filter->GetOutputPort());
+  sphereMapper->SetInputConnection(fmri_filter->GetOutputPort(0));
 
-  vtkSmartPointer<vtkActor> actor =
+  vtkSmartPointer<vtkActor> sphereActor =
       vtkSmartPointer<vtkActor>::New();
-  actor->SetMapper(mapper);
+  sphereActor->SetMapper(sphereMapper);
+  sphereActor->GetProperty()->SetColor(1, 0, 0);
+
+  vtkSmartPointer<vtkPolyDataMapper> tubeMapper =
+      vtkSmartPointer<vtkPolyDataMapper>::New();
+  tubeMapper->SetInputConnection(fmri_filter->GetOutputPort(1));
+
+  vtkSmartPointer<vtkActor> tubeActor =
+      vtkSmartPointer<vtkActor>::New();
+  tubeActor->SetMapper(tubeMapper);
+  tubeActor->GetProperty()->SetColor(0.5, 0.5, 0.5);
 
   vtkSmartPointer<vtkSTLReader> stlReader1 = 
     vtkSmartPointer<vtkSTLReader>::New();
@@ -65,7 +75,7 @@ int main( int argc, char** argv )
   vtkSmartPointer<vtkActor> leftActor =
     vtkSmartPointer<vtkActor>::New();
   leftActor->SetMapper(leftMapper);
-  // leftActor->GetProperty()->SetOpacity(0.3);
+  leftActor->GetProperty()->SetOpacity(0.3);
 
   vtkSmartPointer<vtkSTLReader> stlReader2 = 
     vtkSmartPointer<vtkSTLReader>::New();
@@ -79,19 +89,25 @@ int main( int argc, char** argv )
   vtkSmartPointer<vtkActor> rightActor =
     vtkSmartPointer<vtkActor>::New();
   rightActor->SetMapper(rightMapper);
-  // rightActor->GetProperty()->SetOpacity(0.3);
+  rightActor->GetProperty()->SetOpacity(0.3);
+
+  vtkSmartPointer<vtkAxesActor> axesActor =
+    vtkSmartPointer<vtkAxesActor>::New();
+  axesActor->SetTotalLength(100, 100, 100);
 
   vtkSmartPointer<vtkRenderer> renderer =
       vtkSmartPointer<vtkRenderer>::New();
-  renderer->AddActor(actor);
+  renderer->AddActor(sphereActor);
+  renderer->AddActor(tubeActor);
   renderer->AddActor(leftActor);
   renderer->AddActor(rightActor);
-  renderer->AddActor(vtkSmartPointer<vtkAxesActor>::New());
+  renderer->AddActor(axesActor);
 
   vtkSmartPointer<vtkRenderWindow> renderWindow =
       vtkSmartPointer<vtkRenderWindow>::New();
   // renderWindow->OffScreenRenderingOn();
   renderWindow->AddRenderer(renderer);
+  renderWindow->SetSize(1024, 1024);
   renderWindow->Render();
 
   vtkSmartPointer<vtkWindowToImageFilter> windowToImageFIlter =
@@ -101,9 +117,30 @@ int main( int argc, char** argv )
   vtkSmartPointer<vtkPNGWriter> pngWriter =
     vtkSmartPointer<vtkPNGWriter>::New();
   pngWriter->SetInputConnection(windowToImageFIlter->GetOutputPort());
-
   pngWriter->SetFileName("test.png");
   pngWriter->Write();
+
+  renderer->GetActiveCamera()->SetPosition(0, 0, 1);
+  // renderer->GetActiveCamera()->SetFocalPoint(0, 0, 0);
+  renderer->ResetCamera();
+  renderer->ResetCameraClippingRange();
+  renderWindow->Render();
+
+  windowToImageFIlter->Modified();
+  pngWriter->SetFileName("fmri-connection-superior.png");
+  pngWriter->Write();
+
+
+  renderer->GetActiveCamera()->SetPosition(0, 0, -1);
+  // renderer->GetActiveCamera()->SetFocalPoint(0, 0, 0);
+  renderer->ResetCamera();
+  renderer->ResetCameraClippingRange();
+  renderWindow->Render();
+
+  windowToImageFIlter->Modified();
+  pngWriter->SetFileName("fmri-connection-anterior.png");
+  pngWriter->Write();
+
   vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor =
       vtkSmartPointer<vtkRenderWindowInteractor>::New();
   renderWindowInteractor->SetRenderWindow(renderWindow);
