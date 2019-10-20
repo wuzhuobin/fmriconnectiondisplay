@@ -14,6 +14,21 @@ public:
   vtkSetMacro(Matrix, CorrelationMatrix*);
   vtkGetMacro(Matrix, CorrelationMatrix*);
 
+  vtkSetMacro(SphereRadius, double);
+  vtkGetMacro(SphereRadius, double);
+
+
+  vtkBooleanMacro(UseTube, bool);
+  vtkSetMacro(UseTube, bool);
+  vtkGetMacro(UseTube, bool);
+
+
+  vtkSetMacro(TubeRadius, double);
+  vtkGetMacro(TubeRadius, double);
+
+  vtkSetClampMacro(Percentile, double, 0, 1);
+  vtkGetMacro(Percentile, double);
+
 protected:
   vtkFmriConnectionDisplay();
   virtual ~vtkFmriConnectionDisplay() override;
@@ -23,12 +38,14 @@ protected:
                           vtkInformationVector* outputVector) override;
 
   CorrelationMatrix *Matrix;
+  double SphereRadius;
+  bool UseTube;
+  double TubeRadius;
+  double Percentile;
 private:
   vtkFmriConnectionDisplay(const vtkFmriConnectionDisplay&) = delete;
   void operator=(const vtkFmriConnectionDisplay&) = delete;
-  static const int TOP;
-  static const double C;
-  static const double K;
+  static const int DIM;
 };
 
 #endif //!__VTK_FMRI_CONNECTION_DISPLAY_H__

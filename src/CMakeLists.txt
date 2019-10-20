@@ -6,6 +6,7 @@ find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
 
 find_package(Boost REQUIRED)
+find_package(Boost REQUIRED COMPONENTS program_options)
 
 file(
   GLOB
@@ -29,6 +30,7 @@ target_link_libraries(
   ${PROJECT_NAME}
   PUBLIC
   ${VTK_LIBRARIES}
+  ${Boost_LIBRARIES}
 )
 
 target_include_directories(
