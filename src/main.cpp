@@ -151,7 +151,7 @@ int execute(const boost::program_options::variables_map &map)
   vtkSmartPointer<vtkActor> tubeActor =
       vtkSmartPointer<vtkActor>::New();
   tubeActor->SetMapper(tubeMapper);
-  tubeActor->GetProperty()->SetColor(0.5, 0.5, 0.5);
+  // tubeActor->GetProperty()->SetColor(0.3, 0.3, 0.3);
 
   vtkSmartPointer<vtkSTLReader> stlReader1 = 
     vtkSmartPointer<vtkSTLReader>::New();
@@ -166,6 +166,7 @@ int execute(const boost::program_options::variables_map &map)
     vtkSmartPointer<vtkActor>::New();
   leftActor->SetMapper(leftMapper);
   leftActor->GetProperty()->SetOpacity(opacity);
+  leftActor->GetProperty()->SetColor(0.5, 0.5, 0.5);
 
   vtkSmartPointer<vtkSTLReader> stlReader2 = 
     vtkSmartPointer<vtkSTLReader>::New();
@@ -180,6 +181,7 @@ int execute(const boost::program_options::variables_map &map)
     vtkSmartPointer<vtkActor>::New();
   rightActor->SetMapper(rightMapper);
   rightActor->GetProperty()->SetOpacity(opacity);
+  rightActor->GetProperty()->SetColor(0.5, 0.5, 0.5);
 
   vtkSmartPointer<vtkAxesActor> axesActor =
     vtkSmartPointer<vtkAxesActor>::New();

@@ -2,6 +2,8 @@
 #define __VTK_FMRI_CONNECTION_DISPLAY_H__
 #pragma once
 #include <vtkPolyDataAlgorithm.h>
+class vtkLineSource;
+class vtkTubeFilter;
 
 class vtkFmriConnectionDisplay : public vtkPolyDataAlgorithm
 {
@@ -42,10 +44,12 @@ protected:
   bool UseTube;
   double TubeRadius;
   double Percentile;
+  std::vector<vtkLineSource*> Lines;
+  std::vector<vtkTubeFilter*> Tubes;
 private:
   vtkFmriConnectionDisplay(const vtkFmriConnectionDisplay&) = delete;
   void operator=(const vtkFmriConnectionDisplay&) = delete;
-  static const int DIM;
+  // static const int DIM;
 };
 
 #endif //!__VTK_FMRI_CONNECTION_DISPLAY_H__
